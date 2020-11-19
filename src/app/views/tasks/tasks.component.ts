@@ -17,9 +17,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   constructor(private dataHandlerService: DataHandlerService) { }
 
   ngOnInit(): void {
-    this.getTasksSub = this.dataHandlerService.getTasks().subscribe(tasks => {
-      this.tasks = tasks;
-    });
+    this.dataHandlerService.tasksSubject.subscribe(tasks => this.tasks = tasks);
   }
 
   ngOnDestroy(): void {

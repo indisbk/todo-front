@@ -9,9 +9,12 @@
   </a></div>
   <div class="sidebar-wrapper">
     <ul class="nav">
-      <li class="nav-item" *ngFor="let category of categories">
-        <a class="nav-link" href="./dashboard.html">
-          <i class="material-icons">dashboard</i>
+      <li
+        class="nav-item"
+        *ngFor="let category of categories"
+        (click)="showTasksByCategory(category)"
+      >
+        <a class="nav-link">
           <p>{{category.title}}</p>
         </a>
       </li>
