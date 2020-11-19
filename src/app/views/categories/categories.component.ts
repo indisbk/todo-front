@@ -14,6 +14,8 @@ export class CategoriesComponent implements OnInit, OnDestroy {
 
   getCategoriesSub: Subscription;
 
+  selectedCategory: Category;
+
   constructor(private dataHandlerService: DataHandlerService) { }
 
   ngOnInit(): void {
@@ -29,6 +31,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   }
 
   showTasksByCategory(category: Category): void {
+    this.selectedCategory = category;
     this.dataHandlerService.fillTasksByCategory(category);
   }
 }
