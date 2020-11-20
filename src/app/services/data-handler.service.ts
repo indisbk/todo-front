@@ -18,6 +18,10 @@ export class DataHandlerService {
     return of(TestData.categories);
   }
 
+  fillAllTasks(): void {
+    this.tasksSubject.next(TestData.tasks);
+  }
+
   fillTasksByCategory(category: Category): void {
     const tasks = TestData.tasks.filter(task => task.category === category);
     this.tasksSubject.next(tasks);

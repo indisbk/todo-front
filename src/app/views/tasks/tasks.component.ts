@@ -26,4 +26,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     }
   }
 
+  toggleTaskCompleted(task: Task): void {
+    task.completed = !task.completed;
+  }
 }
