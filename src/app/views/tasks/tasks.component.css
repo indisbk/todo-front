@@ -3,6 +3,18 @@
   color: #797979;
 }
 
-.novalue {
+.nodate {
   color: #b7b7b7;
+}
+
+.nopriority {
+  color: #b7b7b7;
+}
+
+.nocategory {
+  color: #b7b7b7;
+}
+
+table {
+  width: 100%;
 }
