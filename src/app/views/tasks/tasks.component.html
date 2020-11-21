@@ -3,7 +3,7 @@
     <h4 class="card-title">Список задач</h4>
   </div>
   <div class="card-body table-responsive">
-    <table [dataSource]="dataSource" mat-table>
+    <table [dataSource]="dataSource" mat-table matSort>
 
       <!--Priority color-->
       <ng-container matColumnDef="color">
@@ -14,14 +14,14 @@
       <!--Numeration-->
       <ng-container matColumnDef="id">
         <th *matHeaderCellDef mat-header-cell></th>
-        <td *matCellDef="let idx = index" mat-cell>
+        <td *matCellDef="let idx = index" class="text-center" mat-cell>
           {{idx + 1}}
         </td>
       </ng-container>
 
       <!--Task title-->
       <ng-container matColumnDef="title">
-        <th *matHeaderCellDef mat-header-cell>Название</th>
+        <th *matHeaderCellDef mat-header-cell mat-sort-header>Название</th>
         <td *matCellDef="let task" [class.completed]="task.completed" mat-cell>
           {{task.title}}
         </td>
@@ -29,7 +29,7 @@
 
       <!--Complete date-->
       <ng-container matColumnDef="date">
-        <th *matHeaderCellDef mat-header-cell>Срок</th>
+        <th *matHeaderCellDef mat-header-cell mat-sort-header>Срок</th>
         <td *matCellDef="let task" [ngClass]="{'completed': task.completed, 'nodate': !task.date}" mat-cell>
           {{task.date ? (task.date | date: 'dd-MM-yyyy') : 'Без даты'}}
         </td>
@@ -37,7 +37,7 @@
 
       <!--Priority-->
       <ng-container matColumnDef="priority">
-        <th *matHeaderCellDef mat-header-cell>Приоритет</th>
+        <th *matHeaderCellDef mat-header-cell mat-sort-header>Приоритет</th>
         <td *matCellDef="let task" [ngClass]="{'completed': task.completed, 'nopriority': !task.priority}" mat-cell>
           {{task.priority ? task.priority.title : 'Без приоритета'}}
         </td>
@@ -45,7 +45,7 @@
 
       <!--Category-->
       <ng-container matColumnDef="category">
-        <th *matHeaderCellDef mat-header-cell>Категория</th>
+        <th *matHeaderCellDef mat-header-cell mat-sort-header>Категория</th>
         <td
           *matCellDef="let task"
           [ngClass]="{
@@ -65,5 +65,7 @@
       <!--Table rows-->
       <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
     </table>
+
+    <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
   </div>
 </div>

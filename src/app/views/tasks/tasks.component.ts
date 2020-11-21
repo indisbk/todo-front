@@ -1,31 +1,40 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {DataHandlerService} from '../../services/data-handler.service';
 import {Task} from '../../model/Task';
 import {MatTableDataSource} from '@angular/material/table';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+
+const COMPLETED_COLOR = '#f8f9fa';
+const NO_PRIORITY_COLOR = '#fff';
+
 
 @Component({
   selector: 'app-tasks',
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.css']
 })
-export class TasksComponent implements OnInit {
+export class TasksComponent implements OnInit, AfterViewInit {
 
   // Field's table for view in template
-   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category'];
+  displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category'];
 
   // Container for table data
-  dataSource: MatTableDataSource<Task>;
+  dataSource = new MatTableDataSource<Task>();
 
-  tasks: Task[];
+  // link to table components
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(private dataHandlerService: DataHandlerService) { }
 
-  ngOnInit(): void {
-    this.dataHandlerService.tasksSubject.subscribe(tasks => this.tasks = tasks);
+  // In runtime of the method all data is inited
+  ngAfterViewInit(): void {
+    this.addTableObjects();
+  }
 
-    // initialization is necessarily
-    this.dataSource = new MatTableDataSource<Task>();
-    this.refreshTable();
+  ngOnInit(): void {
+    this.dataHandlerService.tasksSubject.subscribe(tasks => this.refreshTable(tasks));
   }
 
   toggleTaskCompleted(task: Task): void {
@@ -33,15 +42,42 @@ export class TasksComponent implements OnInit {
   }
 
   // Show tasks data
-  private refreshTable(): void {
-    this.dataSource.data = this.tasks;
+  private refreshTable(tasks: Task[]): void {
+    this.dataSource.data = tasks;
+    this.addTableObjects();
+
+    // sorting by columns
+    this.dataSource.sortingDataAccessor = (task, colName): any => {
+      switch (colName) {
+        case 'priority': {
+          return task.priority ? task.priority.id : null;
+        }
+        case 'category': {
+          return task.category ? task.category.title : null;
+        }
+        case 'date': {
+          return task.date ? task.date : null;
+        }
+        case 'title': {
+          return task.title;
+        }
+      }
+    };
   }
 
   // Return priority color
   getPriorityColor(task: Task): string {
+    if (task.completed) {
+      return COMPLETED_COLOR;
+    }
     if (task.priority && task.priority.color) {
       return task.priority.color;
     }
-    return '#fff';
+    return NO_PRIORITY_COLOR;
+  }
+
+  private addTableObjects(): void {
+    this.dataSource.sort = this.sort; // component for sort
+    this.dataSource.paginator = this.paginator; // component for paginator
   }
 }
