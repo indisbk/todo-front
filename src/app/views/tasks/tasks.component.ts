@@ -1,10 +1,9 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {DataHandlerService} from '../../services/data-handler.service';
 import {Task} from '../../model/Task';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
-import {Subscription} from 'rxjs';
 
 const COMPLETED_COLOR = '#f8f9fa';
 const NO_PRIORITY_COLOR = '#fff';
@@ -15,7 +14,7 @@ const NO_PRIORITY_COLOR = '#fff';
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.css']
 })
-export class TasksComponent implements OnInit, AfterViewInit, OnDestroy {
+export class TasksComponent implements OnInit, AfterViewInit {
 
   // Field's table for view in template
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category'];
@@ -27,9 +26,10 @@ export class TasksComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  getTasksSub: Subscription;
+  @Input() private tasks: Task[];
 
-  constructor(private dataHandlerService: DataHandlerService) { }
+  constructor(private dataHandlerService: DataHandlerService) {
+  }
 
   // In runtime of the method all data is inited
   ngAfterViewInit(): void {
@@ -37,7 +37,7 @@ export class TasksComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getTasksSub = this.dataHandlerService.getAllTasks().subscribe(tasks => this.refreshTable(tasks));
+    this.fillTable();
   }
 
   toggleTaskCompleted(task: Task): void {
@@ -45,8 +45,8 @@ export class TasksComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // Show tasks data
-  private refreshTable(tasks: Task[]): void {
-    this.dataSource.data = tasks;
+  private fillTable(): void {
+    this.dataSource.data = this.tasks;
     this.addTableObjects();
 
     // sorting by columns
@@ -82,11 +82,5 @@ export class TasksComponent implements OnInit, AfterViewInit, OnDestroy {
   private addTableObjects(): void {
     this.dataSource.sort = this.sort; // component for sort
     this.dataSource.paginator = this.paginator; // component for paginator
-  }
-
-  ngOnDestroy(): void {
-    if (this.getTasksSub) {
-      this.getTasksSub.unsubscribe();
-    }
   }
 }

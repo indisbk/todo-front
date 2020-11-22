@@ -24,8 +24,7 @@ export class DataHandlerService {
     return this.taskDaoArray.getAll();
   }
 
-  /*fillTasksByCategory(category: Category): void {
-    const tasks = TestData.tasks.filter(task => task.category === category);
-    this.tasksSubject.next(tasks);
-  }*/
+  getTasksByCategory(category: Category): Observable<Task[]> {
+    return this.taskDaoArray.getTasksByCategory(category);
+  }
 }
