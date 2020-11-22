@@ -14,9 +14,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   categories: Category[];
 
-  getTasksSub: Subscription;
-
   getCategoriesSub: Subscription;
+
+  selectedCategory: Category;
 
   constructor(
     private dataHandlerService: DataHandlerService
@@ -24,18 +24,22 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getTasksSub = this.dataHandlerService.getAllTasks().subscribe(tasks => this.tasks = tasks);
+    this.onSelectCategory(null);
     this.getCategoriesSub = this.dataHandlerService.getCategories().subscribe(categories => {
       this.categories = categories;
     });
   }
 
   ngOnDestroy(): void {
-    if (this.getTasksSub) {
-      this.getTasksSub.unsubscribe();
-    }
     if (this.getCategoriesSub) {
       this.getCategoriesSub.unsubscribe();
     }
+  }
+
+  onSelectCategory(category: Category): void {
+    this.selectedCategory = category;
+
+    this.dataHandlerService.searchTasks(this.selectedCategory)
+      .subscribe((tasks => this.tasks = tasks));
   }
 }

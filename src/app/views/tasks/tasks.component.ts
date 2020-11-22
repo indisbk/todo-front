@@ -26,7 +26,7 @@ export class TasksComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  @Input() private tasks: Task[];
+  private tasks: Task[];
 
   constructor(private dataHandlerService: DataHandlerService) {
   }
@@ -37,6 +37,12 @@ export class TasksComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.fillTable();
+  }
+
+  @Input('tasks')
+  private set setTasks(tasks: Task[]) {
+    this.tasks = tasks;
     this.fillTable();
   }
 

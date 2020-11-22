@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {DataHandlerService} from '../../services/data-handler.service';
 import {Category} from '../../model/Category';
 
@@ -11,15 +11,22 @@ export class CategoriesComponent implements OnInit {
 
   @Input() categories: Category[];
 
+  @Output() selectCategory = new EventEmitter<Category>();
+
   selectedCategory: Category;
 
-  constructor(private dataHandlerService: DataHandlerService) { }
+  constructor() { }
 
   ngOnInit(): void {
   }
 
   showTasksByCategory(category: Category): void {
-    /*this.selectedCategory = category;
-    this.dataHandlerService.fillTasksByCategory(category);*/
+    // nothing to do if category doesn't changed
+    if (this.selectedCategory === category) {
+      return;
+    }
+    this.selectedCategory = category;
+    // call out handler and send to it chosen category
+    this.selectCategory.emit(this.selectedCategory);
   }
 }
