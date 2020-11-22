@@ -31,7 +31,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   }
 
   showTasksByCategory(category: Category): void {
-    this.selectedCategory = category;
-    this.dataHandlerService.fillTasksByCategory(category);
+    /*this.selectedCategory = category;
+    this.dataHandlerService.fillTasksByCategory(category);*/
   }
 }

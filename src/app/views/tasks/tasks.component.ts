@@ -1,9 +1,10 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {DataHandlerService} from '../../services/data-handler.service';
 import {Task} from '../../model/Task';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
+import {Subscription} from 'rxjs';
 
 const COMPLETED_COLOR = '#f8f9fa';
 const NO_PRIORITY_COLOR = '#fff';
@@ -14,7 +15,7 @@ const NO_PRIORITY_COLOR = '#fff';
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.css']
 })
-export class TasksComponent implements OnInit, AfterViewInit {
+export class TasksComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Field's table for view in template
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category'];
@@ -26,6 +27,8 @@ export class TasksComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  getTasksSub: Subscription;
+
   constructor(private dataHandlerService: DataHandlerService) { }
 
   // In runtime of the method all data is inited
@@ -34,7 +37,7 @@ export class TasksComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.dataHandlerService.tasksSubject.subscribe(tasks => this.refreshTable(tasks));
+    this.getTasksSub = this.dataHandlerService.getAllTasks().subscribe(tasks => this.refreshTable(tasks));
   }
 
   toggleTaskCompleted(task: Task): void {
@@ -79,5 +82,11 @@ export class TasksComponent implements OnInit, AfterViewInit {
   private addTableObjects(): void {
     this.dataSource.sort = this.sort; // component for sort
     this.dataSource.paginator = this.paginator; // component for paginator
+  }
+
+  ngOnDestroy(): void {
+    if (this.getTasksSub) {
+      this.getTasksSub.unsubscribe();
+    }
   }
 }

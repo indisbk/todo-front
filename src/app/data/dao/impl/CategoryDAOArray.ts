@@ -1,7 +1,12 @@
 import {CategoryDAO} from '../interfaces/CategoryDAO';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Category} from '../../../model/Category';
+import {Injectable} from '@angular/core';
+import {TestData} from '../../TestData';
 
+@Injectable({
+  providedIn: 'root'
+})
 export class CategoryDAOArray implements CategoryDAO {
   add(category: Category): Observable<Category> {
     return undefined;
@@ -16,7 +21,7 @@ export class CategoryDAOArray implements CategoryDAO {
   }
 
   getAll(): Observable<Category[]> {
-    return undefined;
+    return of(TestData.categories);
   }
 
   search(title: string): Observable<Category[]> {
