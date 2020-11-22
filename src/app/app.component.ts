@@ -44,6 +44,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   onSelectTask(task: Task): void {
-
+    console.log(task);
   }
 }

@@ -1,9 +1,10 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {DataHandlerService} from '../../services/data-handler.service';
 import {Task} from '../../model/Task';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
+import {MatDialog} from '@angular/material/dialog';
+import {EditTaskDialogComponent} from '../../dialog/edit-task-dialog/edit-task-dialog.component';
 
 const COMPLETED_COLOR = '#f8f9fa';
 const NO_PRIORITY_COLOR = '#fff';
@@ -30,7 +31,7 @@ export class TasksComponent implements OnInit, AfterViewInit {
 
   @Output() selectTask = new EventEmitter<Task>();
 
-  constructor(private dataHandlerService: DataHandlerService) {
+  constructor(private dialog: MatDialog) {
   }
 
   // In runtime of the method all data is inited
@@ -92,8 +93,13 @@ export class TasksComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator; // component for paginator
   }
 
-  showTaskInDetail(task: Task): void {
-    this.selectTask.emit(task);
-    console.log(task);
+  openEditTaskDialog(task: Task): void {
+    this.dialog
+      .open(EditTaskDialogComponent, {
+        data: [task, 'Редактирование задачи'],
+        autoFocus: false // give the user a choice
+      })
+      .afterClosed()
+      .subscribe();
   }
 }
