@@ -42,4 +42,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.dataHandlerService.searchTasks(this.selectedCategory)
       .subscribe((tasks => this.tasks = tasks));
   }
+
+  onSelectTask(task: Task): void {
+
+  }
 }

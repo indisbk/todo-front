@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {DataHandlerService} from '../../services/data-handler.service';
 import {Category} from '../../model/Category';
 
 @Component({
