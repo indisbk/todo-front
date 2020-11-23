@@ -3,6 +3,7 @@ import {Task} from './model/Task';
 import {DataHandlerService} from './services/data-handler.service';
 import {Subscription} from 'rxjs';
 import {Category} from './model/Category';
+import {switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -43,7 +44,15 @@ export class AppComponent implements OnInit, OnDestroy {
       .subscribe((tasks => this.tasks = tasks));
   }
 
+  // Update selected task
   onSelectTask(task: Task): void {
-    console.log(task);
+    this.dataHandlerService
+      .updateTask(task)
+      .pipe(
+        switchMap(() => {
+            return this.dataHandlerService.searchTasks(this.selectedCategory);
+          }
+        )
+      ).subscribe(tasks => this.tasks = tasks);
   }
 }

@@ -17,12 +17,29 @@ export class EditTaskDialogComponent implements OnInit {
     private dialog: MatDialog // for open new dialog window(confirmed for example)
   ) { }
 
+  // Title of dialog window
   dialogTitle: string;
+  // Edited task
   task: Task;
+
+  // Temporary field of task title
+  tmpTitle = '';
 
   ngOnInit(): void {
     this.task = this.data[0];
     this.dialogTitle = this.data[1];
   }
 
+  // Press on button 'save' or 'enter'
+  onConfirm(): void {
+    // init task title by new value
+    this.task.title = this.tmpTitle;
+    // give to dialogRef changed task for next process
+    this.dialogRef.close(this.task);
+  }
+
+  // Close dialog window and nothing to do
+  onCancel(): void {
+    this.dialogRef.close(null);
+  }
 }

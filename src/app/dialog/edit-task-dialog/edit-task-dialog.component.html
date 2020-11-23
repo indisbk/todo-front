@@ -1,5 +1,32 @@
-<div>
-  <h3>{{dialogTitle}}</h3>
+<!--Edit task-->
+<mat-dialog-content>
+  <p mat-dialog-title>{{dialogTitle}}</p>
 
-  <p>{{task.title}}</p>
-</div>
+  <mat-form-field class="field-full-width">
+    <mat-label>Название (обязательно)</mat-label>
+    <input
+      matInput
+      #inputTitle
+      [(ngModel)]="tmpTitle"
+      (keydown.enter)="onConfirm()"> <!--save by click on "enter" button-->
+    <button
+      *ngIf="tmpTitle.trim().length > 0"
+      mat-button matSuffix mat-icon-button aria-label="Clear"
+      (click)="tmpTitle = ''" class="size25"
+    >
+      <mat-icon>clear</mat-icon>
+    </button>
+  </mat-form-field>
+</mat-dialog-content>
+
+<!--Action buttons-->
+<mat-dialog-actions>
+  <button
+    mat-raised-button color="primary"
+    (click)="onConfirm()"
+    [disabled]="inputTitle.value.trim().length == 0"> <!--Can't save if value is empty-->
+    Сохранить
+  </button>
+
+  <button mat-raised-button (click)="onCancel()">Отмена</button>
+</mat-dialog-actions>

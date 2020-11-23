@@ -100,6 +100,11 @@ export class TasksComponent implements OnInit, AfterViewInit {
         autoFocus: false // give the user a choice
       })
       .afterClosed()
-      .subscribe();
+      .subscribe(result => {
+        if (result as Task) {
+          this.selectTask.emit(task);
+          return;
+        }
+      });
   }
 }

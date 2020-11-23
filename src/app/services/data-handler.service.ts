@@ -38,4 +38,8 @@ export class DataHandlerService {
   ): Observable<Task[]> {
     return this.taskDaoArray.search(category, searchText, status, priority);
   }
+
+  updateTask(task: Task): Observable<Task> {
+    return this.taskDaoArray.update(task);
+  }
 }
