@@ -2,13 +2,15 @@
 <mat-dialog-content>
   <p mat-dialog-title>{{dialogTitle}}</p>
 
-  <mat-form-field class="field-full-width">
+  <mat-form-field>
     <mat-label>Название (обязательно)</mat-label>
+
     <input
       matInput
       #inputTitle
       [(ngModel)]="tmpTitle"
       (keydown.enter)="onConfirm()"> <!--save by click on "enter" button-->
+
     <button
       *ngIf="tmpTitle.trim().length > 0"
       mat-button matSuffix mat-icon-button aria-label="Clear"
@@ -16,6 +18,30 @@
     >
       <mat-icon>clear</mat-icon>
     </button>
+  </mat-form-field>
+
+  <!--Categories drop-down list-->
+  <mat-form-field>
+    <mat-label>Укажите категорию</mat-label>
+
+    <mat-select [(ngModel)]="tmpCategory">
+      <mat-option [value]="null">Без категории</mat-option>
+      <mat-option *ngFor="let category of categories" [value]="category">
+        {{category.title}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!--Priorities drop-down list-->
+  <mat-form-field>
+    <mat-label>Укажите приоритет</mat-label>
+
+    <mat-select [(ngModel)]="tmpPriority">
+      <mat-option [value]="null">Без приоритета</mat-option>
+      <mat-option *ngFor="let priority of priorities" [value]="priority">
+        {{priority.title}}
+      </mat-option>
+    </mat-select>
   </mat-form-field>
 </mat-dialog-content>
 

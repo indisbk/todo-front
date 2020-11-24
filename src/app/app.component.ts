@@ -26,7 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.onSelectCategory(null);
-    this.getCategoriesSub = this.dataHandlerService.getCategories().subscribe(categories => {
+    this.getCategoriesSub = this.dataHandlerService.getAllCategories().subscribe(categories => {
       this.categories = categories;
     });
   }
