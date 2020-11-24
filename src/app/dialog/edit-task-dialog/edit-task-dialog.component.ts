@@ -4,6 +4,7 @@ import {Task} from '../../model/Task';
 import {DataHandlerService} from '../../services/data-handler.service';
 import {Category} from '../../model/Category';
 import {Priority} from '../../model/Priority';
+import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-edit-task-dialog',
@@ -14,7 +15,7 @@ export class EditTaskDialogComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<EditTaskDialogComponent>, // for work with this dialog window
-    @Inject(MAT_DIALOG_DATA) private data: [Task, string], // data in dialog reference
+    @Inject(MAT_DIALOG_DATA) private data: {taskObj: Task, dialogTitle: string}, // data in dialog reference
     private dataHandlerService: DataHandlerService,
     private dialog: MatDialog // for open new dialog window(confirmed for example)
   ) { }
@@ -35,8 +36,8 @@ export class EditTaskDialogComponent implements OnInit {
   tmpPriority: Priority;
 
   ngOnInit(): void {
-    this.task = this.data[0];
-    this.dialogTitle = this.data[1];
+    this.task = this.data.taskObj;
+    this.dialogTitle = this.data.dialogTitle;
 
     // for view current values
     this.tmpTitle = this.task.title;
@@ -61,5 +62,22 @@ export class EditTaskDialogComponent implements OnInit {
   // Close dialog window and nothing to do
   onCancel(): void {
     this.dialogRef.close(null);
+  }
+
+  delete(): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: '500px',
+      data: {
+        dialogTitle: 'Подтвердите действие',
+        message: `Вы действительно хотите удалить задачу: "${this.task.title}"?`
+      },
+      autoFocus: false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+       this.dialogRef.close('delete'); // press delete button
+      }
+    });
   }
 }

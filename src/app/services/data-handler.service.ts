@@ -48,4 +48,8 @@ export class DataHandlerService {
   getAllPriorities(): Observable<Priority[]> {
     return this.priorityDAOArray.getAll();
   }
+
+  deleteTask(task: Task): Observable<Task> {
+    return this.taskDaoArray.delete(task.id);
+  }
 }
