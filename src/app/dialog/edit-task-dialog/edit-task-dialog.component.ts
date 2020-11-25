@@ -34,6 +34,9 @@ export class EditTaskDialogComponent implements OnInit {
   tmpCategory: Category;
   // Temporary field of task priority
   tmpPriority: Priority;
+  // Temporary field of task date
+  tmpDate: Date;
+
 
   ngOnInit(): void {
     this.task = this.data.taskObj;
@@ -43,6 +46,7 @@ export class EditTaskDialogComponent implements OnInit {
     this.tmpTitle = this.task.title;
     this.tmpCategory = this.task.category;
     this.tmpPriority = this.task.priority;
+    this.tmpDate = this.task.date;
 
     this.dataHandlerService.getAllCategories().subscribe(categories => this.categories = categories);
     this.dataHandlerService.getAllPriorities().subscribe(priorities => this.priorities = priorities);
@@ -54,6 +58,7 @@ export class EditTaskDialogComponent implements OnInit {
     this.task.title = this.tmpTitle;
     this.task.category = this.tmpCategory;
     this.task.priority = this.tmpPriority;
+    this.task.date = this.tmpDate;
 
     // give to dialogRef changed task for next process
     this.dialogRef.close(this.task);
