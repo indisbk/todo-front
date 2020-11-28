@@ -63,8 +63,26 @@
             'link': !task.completed && task.category
             }"
           mat-cell
+          (click)="!task.completed && task.category && onSelectCategory(task.category)"
         >
           {{task.category ? task.category.title : 'Без категории'}}
+        </td>
+      </ng-container>
+
+      <!--Checkbox for complete/activate task-->
+      <ng-container matColumnDef="select">
+        <th *matHeaderCellDef mat-header-cell></th>
+        <td
+          class="text-right"
+          mat-cell
+          *matCellDef="let task"
+        >
+          <mat-checkbox
+            (click)="$event.stopPropagation()"
+            (change)="$event ? onToggleStatus(task) : null"
+            [checked]="task.completed"
+          >
+          </mat-checkbox>
         </td>
       </ng-container>
 
@@ -83,23 +101,6 @@
           <button mat-icon-button (click)="openEditTaskDialog(task)" class="edit-icon">
             <mat-icon aria-hidden="false">edit</mat-icon>
           </button>
-        </td>
-      </ng-container>
-
-      <!--Checkbox for complete/activate task-->
-      <ng-container matColumnDef="select">
-        <th *matHeaderCellDef mat-header-cell></th>
-        <td
-          class="text-right"
-          mat-cell
-          *matCellDef="let task"
-        >
-          <mat-checkbox
-            (click)="$event.stopPropagation()"
-            (change)="$event ? onToggleStatus(task) : null"
-            [checked]="task.completed"
-          >
-          </mat-checkbox>
         </td>
       </ng-container>
 

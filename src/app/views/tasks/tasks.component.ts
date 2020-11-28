@@ -6,6 +6,7 @@ import {MatSort} from '@angular/material/sort';
 import {MatDialog} from '@angular/material/dialog';
 import {EditTaskDialogComponent} from '../../dialog/edit-task-dialog/edit-task-dialog.component';
 import {ConfirmDialogComponent} from '../../dialog/confirm-dialog/confirm-dialog.component';
+import {Category} from '../../model/Category';
 
 const COMPLETED_COLOR = '#f8f9fa';
 const NO_PRIORITY_COLOR = '#fff';
@@ -41,6 +42,7 @@ export class TasksComponent implements OnInit, AfterViewInit {
 
   @Output() editTask = new EventEmitter<Task>();
   @Output() deleteTask = new EventEmitter<Task>();
+  @Output() selectCategory = new EventEmitter<Category>();
 
   constructor(private dialog: MatDialog) {
   }
@@ -144,5 +146,10 @@ export class TasksComponent implements OnInit, AfterViewInit {
           return;
         }
       });
+  }
+
+  onSelectCategory(category: Category): void {
+    // call out handler and send to it chosen category
+    this.selectCategory.emit(category);
   }
 }
