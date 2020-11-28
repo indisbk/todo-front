@@ -5,6 +5,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatDialog} from '@angular/material/dialog';
 import {EditTaskDialogComponent} from '../../dialog/edit-task-dialog/edit-task-dialog.component';
+import {ConfirmDialogComponent} from '../../dialog/confirm-dialog/confirm-dialog.component';
 
 const COMPLETED_COLOR = '#f8f9fa';
 const NO_PRIORITY_COLOR = '#fff';
@@ -18,7 +19,16 @@ const NO_PRIORITY_COLOR = '#fff';
 export class TasksComponent implements OnInit, AfterViewInit {
 
   // Field's table for view in template
-  displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category'];
+  displayedColumns: string[] = [
+    'color',
+    'id',
+    'title',
+    'date',
+    'priority',
+    'category',
+    'operations',
+    'select'
+  ];
 
   // Container for table data
   dataSource = new MatTableDataSource<Task>();
@@ -29,7 +39,7 @@ export class TasksComponent implements OnInit, AfterViewInit {
 
   private tasks: Task[];
 
-  @Output() selectTask = new EventEmitter<Task>();
+  @Output() editTask = new EventEmitter<Task>();
   @Output() deleteTask = new EventEmitter<Task>();
 
   constructor(private dialog: MatDialog) {
@@ -50,8 +60,9 @@ export class TasksComponent implements OnInit, AfterViewInit {
     this.fillTable();
   }
 
-  toggleTaskCompleted(task: Task): void {
+  onToggleStatus(task: Task): void {
     task.completed = !task.completed;
+    this.editTask.emit(task);
   }
 
   // Show tasks data
@@ -110,7 +121,26 @@ export class TasksComponent implements OnInit, AfterViewInit {
           return;
         }
         if (result as Task) {
-          this.selectTask.emit(task);
+          this.editTask.emit(task);
+          return;
+        }
+      });
+  }
+
+  openDeleteDialog(task: Task): void {
+    const dialogRef = this.dialog
+      .open(ConfirmDialogComponent, {
+        maxWidth: '500px',
+        data: {
+          dialogTitle: 'Подтвердите действие',
+          message: `Вы действительно хотите удалить задачу: "${task.title}"?`
+        },
+        autoFocus: false
+      });
+
+    dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.deleteTask.emit(task);
           return;
         }
       });
