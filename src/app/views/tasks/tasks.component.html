@@ -11,13 +11,21 @@
       <!--Priority color-->
       <ng-container matColumnDef="color">
         <th *matHeaderCellDef mat-header-cell></th>
-        <td *matCellDef="let task" [style.background-color]="getPriorityColor(task)" mat-cell></td>
+        <td
+          *matCellDef="let task"
+          [style.background-color]="getPriorityColor(task)"
+          mat-cell
+          class="col-color"
+        ></td>
       </ng-container>
 
       <!--Numeration-->
       <ng-container matColumnDef="id">
         <th *matHeaderCellDef mat-header-cell></th>
-        <td *matCellDef="let idx = index" class="text-center" mat-cell>
+        <td
+          *matCellDef="let idx = index"
+          class="text-center col-id"
+          mat-cell>
           {{idx + 1 + '.'}}
         </td>
       </ng-container>
@@ -30,7 +38,7 @@
           [class.completed]="task.completed"
           mat-cell
           (click)="openEditTaskDialog(task)"
-          class="pointer"
+          class="col-title pointer"
         >
           {{task.title}}
         </td>
@@ -39,7 +47,12 @@
       <!--Complete date-->
       <ng-container matColumnDef="date">
         <th *matHeaderCellDef mat-header-cell mat-sort-header>Срок</th>
-        <td *matCellDef="let task" [ngClass]="{'completed': task.completed, 'nodate': !task.date}" mat-cell>
+        <td
+          *matCellDef="let task"
+          [ngClass]="{'completed': task.completed, 'novalue': !task.date}"
+          mat-cell
+          class="col-date"
+        >
           {{task.date | taskDate}}
         </td>
       </ng-container>
@@ -47,7 +60,12 @@
       <!--Priority-->
       <ng-container matColumnDef="priority">
         <th *matHeaderCellDef mat-header-cell mat-sort-header>Приоритет</th>
-        <td *matCellDef="let task" [ngClass]="{'completed': task.completed, 'nopriority': !task.priority}" mat-cell>
+        <td
+          *matCellDef="let task"
+          [ngClass]="{'completed': task.completed, 'novalue': !task.priority}"
+          mat-cell
+          class="col-priority"
+        >
           {{task.priority ? task.priority.title : 'Без приоритета'}}
         </td>
       </ng-container>
@@ -59,11 +77,12 @@
           *matCellDef="let task"
           [ngClass]="{
             'completed': task.completed,
-            'nocategory': !task.category,
+            'novalue': !task.category,
             'link': !task.completed && task.category
             }"
           mat-cell
           (click)="!task.completed && task.category && onSelectCategory(task.category)"
+          class="col-category"
         >
           {{task.category ? task.category.title : 'Без категории'}}
         </td>
@@ -73,7 +92,7 @@
       <ng-container matColumnDef="select">
         <th *matHeaderCellDef mat-header-cell></th>
         <td
-          class="text-right"
+          class="col-select text-left"
           mat-cell
           *matCellDef="let task"
         >
@@ -93,13 +112,14 @@
           mat-cell
           *matCellDef="let task"
           [class.completed]="task.completed"
+          class="col-operations"
         >
-          <button mat-icon-button (click)="openDeleteDialog(task)" class="delete-icon">
-            <mat-icon aria-hidden="false">delete</mat-icon>
-          </button>
-
           <button mat-icon-button (click)="openEditTaskDialog(task)" class="edit-icon">
             <mat-icon aria-hidden="false">edit</mat-icon>
+          </button>
+
+          <button mat-icon-button (click)="openDeleteDialog(task)" class="delete-icon">
+            <mat-icon aria-hidden="false">delete</mat-icon>
           </button>
         </td>
       </ng-container>

@@ -27,8 +27,8 @@ export class TasksComponent implements OnInit, AfterViewInit {
     'date',
     'priority',
     'category',
-    'operations',
-    'select'
+    'select',
+    'operations'
   ];
 
   // Container for table data
@@ -141,9 +141,9 @@ export class TasksComponent implements OnInit, AfterViewInit {
       });
 
     dialogRef.afterClosed().subscribe(result => {
-        if (result) {
+      console.log(result);
+      if (result) {
           this.deleteTask.emit(task);
-          return;
         }
       });
   }

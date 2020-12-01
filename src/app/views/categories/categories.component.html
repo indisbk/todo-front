@@ -6,6 +6,22 @@
   </div>
   <div class="sidebar-wrapper">
     <ul class="nav">
+
+      <!--Virtual category "All"-->
+      <li
+        class="nav-item pointer"
+        (click)="showTasksByCategory(null)"
+        [class.active]="selectedCategory === null"
+      >
+        <a class="nav-link pointer">
+          <!--Category name-->
+          <span class="all-category-title">Все</span>
+        </a>
+      </li>
+
+      <!--Separator-->
+      <div class="line"></div>
+
       <li
         class="nav-item pointer"
         *ngFor="let category of categories"
