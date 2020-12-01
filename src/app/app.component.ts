@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Task} from './model/Task';
 import {DataHandlerService} from './services/data-handler.service';
 import {Subscription} from 'rxjs';

@@ -14,6 +14,8 @@ export class CategoriesComponent implements OnInit {
 
   @Input() selectedCategory: Category;
 
+  indexMouseMove: number;
+
   constructor() { }
 
   ngOnInit(): void {
@@ -27,5 +29,13 @@ export class CategoriesComponent implements OnInit {
     this.selectedCategory = category;
     // call out handler and send to it chosen category
     this.selectCategory.emit(this.selectedCategory);
+  }
+
+  showEditIcon(index: number): void {
+    this.indexMouseMove = index;
+  }
+
+  openEditDialog(category: Category): void {
+
   }
 }
