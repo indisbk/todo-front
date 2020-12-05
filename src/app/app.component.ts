@@ -14,14 +14,17 @@ import {Priority} from './model/Priority';
 export class AppComponent implements OnInit, OnDestroy {
   tasks: Task[];
 
+  priorities: Priority[];
+
   categories: Category[];
 
   getCategoriesSub: Subscription;
+  getPrioritiesSub: Subscription;
 
   selectedCategory: Category;
   private searchTaskText: string;
   private statusFilter: boolean;
-  private priority: Priority;
+  private priorityFilter: Priority;
 
   constructor(
     private dataHandlerService: DataHandlerService
@@ -33,11 +36,15 @@ export class AppComponent implements OnInit, OnDestroy {
     this.getCategoriesSub = this.dataHandlerService.getAllCategories().subscribe(categories => {
       this.categories = categories;
     });
+    this.getPrioritiesSub = this.dataHandlerService.getAllPriorities().subscribe(priorities => this.priorities = priorities);
   }
 
   ngOnDestroy(): void {
     if (this.getCategoriesSub) {
       this.getCategoriesSub.unsubscribe();
+    }
+    if (this.getPrioritiesSub) {
+      this.getPrioritiesSub.unsubscribe();
     }
   }
 
@@ -46,7 +53,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.selectedCategory,
       this.searchTaskText,
       this.statusFilter,
-      this.priority
+      this.priorityFilter
     ).subscribe(tasks => this.tasks = tasks);
   }
 
@@ -100,6 +107,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
   onFilterTasksByStatus(status: boolean): void {
     this.statusFilter = status;
+    this.updateTasks();
+  }
+
+  onFilterTasksByPriority(priority: Priority): void {
+    this.priorityFilter = priority;
     this.updateTasks();
   }
 }

@@ -7,6 +7,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {EditTaskDialogComponent} from '../../dialog/edit-task-dialog/edit-task-dialog.component';
 import {ConfirmDialogComponent} from '../../dialog/confirm-dialog/confirm-dialog.component';
 import {Category} from '../../model/Category';
+import {Priority} from '../../model/Priority';
 
 const COMPLETED_COLOR = '#f8f9fa';
 const NO_PRIORITY_COLOR = '#fff';
@@ -41,12 +42,17 @@ export class TasksComponent implements OnInit, AfterViewInit {
   private tasks: Task[];
   searchTaskText: string;
   selectedStatusFilter: boolean;
+  selectedPriorityFilter: Priority;
+
+  @Input()
+  priorities: Priority[];
 
   @Output() editTask = new EventEmitter<Task>();
   @Output() deleteTask = new EventEmitter<Task>();
   @Output() selectCategory = new EventEmitter<Category>();
   @Output() filterByTitle = new EventEmitter<string>();
   @Output() filterByStatus = new EventEmitter<boolean>();
+  @Output() filterByPriority = new EventEmitter<Priority>();
 
 
   constructor(private dialog: MatDialog) {
@@ -167,5 +173,10 @@ export class TasksComponent implements OnInit, AfterViewInit {
       this.selectedStatusFilter = value;
       this.filterByStatus.emit(this.selectedStatusFilter);
     }
+  }
+
+  onFilterByPriority(priority: Priority): void {
+    this.selectedPriorityFilter = priority;
+    this.filterByPriority.emit(this.selectedPriorityFilter);
   }
 }

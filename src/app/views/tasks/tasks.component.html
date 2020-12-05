@@ -57,6 +57,28 @@
   <div class="col-md-3 col-sm-12">
     <!--Filter by priority-->
 
+    <mat-form-field>
+      <mat-select
+        #priorityFilter
+        (valueChange)="onFilterByPriority(this.$event)"
+        [value]="selectedPriorityFilter"
+        placeholder="Фильтр по приоритету"
+      >
+        <mat-option [value]="null">Все приоритеты</mat-option>
+        <mat-option *ngFor="let priority of priorities" [value]="priority">{{priority.title}}</mat-option>
+      </mat-select>
+      <button
+        (click)="$event.stopPropagation(); onFilterByPriority(null)"
+        *ngIf="selectedPriorityFilter != null"
+        aria-label="Clear"
+        class="clear-icon size25 gray"
+        mat-button
+        mat-icon-button
+        matSuffix
+      >
+        <mat-icon>clear</mat-icon>
+      </button>
+    </mat-form-field>
   </div>
 
   <div class="col-md-3 col-sm-12 text-right">
