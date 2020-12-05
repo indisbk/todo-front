@@ -4,6 +4,7 @@ import {DataHandlerService} from './services/data-handler.service';
 import {Subscription} from 'rxjs';
 import {Category} from './model/Category';
 import {switchMap} from 'rxjs/operators';
+import {Priority} from './model/Priority';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,9 @@ export class AppComponent implements OnInit, OnDestroy {
   getCategoriesSub: Subscription;
 
   selectedCategory: Category;
+  private searchTaskText: string;
+  private statusFilter: boolean;
+  private priority: Priority;
 
   constructor(
     private dataHandlerService: DataHandlerService
@@ -37,11 +41,18 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
+  private updateTasks(): void {
+    this.dataHandlerService.searchTasks(
+      this.selectedCategory,
+      this.searchTaskText,
+      this.statusFilter,
+      this.priority
+    ).subscribe(tasks => this.tasks = tasks);
+  }
+
   onSelectCategory(category: Category): void {
     this.selectedCategory = category;
-
-    this.dataHandlerService.searchTasks(this.selectedCategory)
-      .subscribe((tasks => this.tasks = tasks));
+    this.updateTasks();
   }
 
   // Update selected task
@@ -80,5 +91,15 @@ export class AppComponent implements OnInit, OnDestroy {
         this.onSelectCategory(this.selectedCategory);
       });
 
+  }
+
+  onFilterTasksByText(searchText: string): void {
+    this.searchTaskText = searchText;
+    this.updateTasks();
+  }
+
+  onFilterTasksByStatus(status: boolean): void {
+    this.statusFilter = status;
+    this.updateTasks();
   }
 }

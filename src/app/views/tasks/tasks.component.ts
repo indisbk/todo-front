@@ -39,10 +39,15 @@ export class TasksComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   private tasks: Task[];
+  searchTaskText: string;
+  selectedStatusFilter: boolean;
 
   @Output() editTask = new EventEmitter<Task>();
   @Output() deleteTask = new EventEmitter<Task>();
   @Output() selectCategory = new EventEmitter<Category>();
+  @Output() filterByTitle = new EventEmitter<string>();
+  @Output() filterByStatus = new EventEmitter<boolean>();
+
 
   constructor(private dialog: MatDialog) {
   }
@@ -151,5 +156,16 @@ export class TasksComponent implements OnInit, AfterViewInit {
   onSelectCategory(category: Category): void {
     // call out handler and send to it chosen category
     this.selectCategory.emit(category);
+  }
+
+  onFilterByTitle(): void {
+    this.filterByTitle.emit(this.searchTaskText);
+  }
+
+  onFilterByStatus(value: boolean): void {
+    if (value !== this.selectedStatusFilter) {
+      this.selectedStatusFilter = value;
+      this.filterByStatus.emit(this.selectedStatusFilter);
+    }
   }
 }
