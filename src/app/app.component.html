@@ -81,6 +81,8 @@
             <app-tasks
               [priorities]="priorities"
               [tasks]="tasks"
+              [selectedCategory]="selectedCategory"
+              (addTask)="onAddTask($event)"
               (editTask)="onSelectTask($event)"
               (deleteTask)="onDeleteTask($event)"
               (selectCategory)="onSelectCategory($event)"

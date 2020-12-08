@@ -10,8 +10,17 @@ import {Injectable} from '@angular/core';
   providedIn: 'root'
 })
 export class TaskDAOArray implements TaskDAO {
-  add(object: Task): Observable<Task> {
-    return undefined;
+
+  add(newTask: Task): Observable<Task> {
+    if (newTask.id === null || newTask.id === 0) {
+      newTask.id = this.getLastIdTask();
+    }
+    TestData.tasks.push(newTask);
+    return of(newTask);
+  }
+
+  private getLastIdTask(): number {
+    return Math.max.apply(Math, TestData.tasks.map(task => task.id)) + 1;
   }
 
   delete(id: number): Observable<Task> {

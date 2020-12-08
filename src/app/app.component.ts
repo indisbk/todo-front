@@ -3,8 +3,8 @@ import {Task} from './model/Task';
 import {DataHandlerService} from './services/data-handler.service';
 import {Subscription} from 'rxjs';
 import {Category} from './model/Category';
-import {switchMap} from 'rxjs/operators';
 import {Priority} from './model/Priority';
+import {switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +12,7 @@ import {Priority} from './model/Priority';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
+
   tasks: Task[];
 
   priorities: Priority[];
@@ -33,9 +34,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.onSelectCategory(null);
-    this.getCategoriesSub = this.dataHandlerService.getAllCategories().subscribe(categories => {
-      this.categories = categories;
-    });
+    this.getCategoriesSub = this.dataHandlerService.getAllCategories().subscribe(categories => this.categories = categories);
     this.getPrioritiesSub = this.dataHandlerService.getAllPriorities().subscribe(priorities => this.priorities = priorities);
   }
 
@@ -54,7 +53,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.searchTaskText,
       this.statusFilter,
       this.priorityFilter
-    ).subscribe(tasks => this.tasks = tasks);
+    ).subscribe((tasks: Task[]) => this.tasks = tasks);
   }
 
   onSelectCategory(category: Category): void {
@@ -77,11 +76,7 @@ export class AppComponent implements OnInit, OnDestroy {
   onDeleteTask(task: Task): void {
     this.dataHandlerService
       .deleteTask(task)
-      .pipe(
-        switchMap(() => {
-          return this.dataHandlerService.searchTasks(this.selectedCategory);
-        })
-      ).subscribe(tasks => this.tasks = tasks);
+      .subscribe(() => this.updateTasks());
   }
 
   onUpdateCategory(category: Category): void {
@@ -113,5 +108,11 @@ export class AppComponent implements OnInit, OnDestroy {
   onFilterTasksByPriority(priority: Priority): void {
     this.priorityFilter = priority;
     this.updateTasks();
+  }
+
+  onAddTask(newTask: Task): void {
+    this.dataHandlerService
+      .addTask(newTask)
+      .subscribe(() => this.updateTasks());
   }
 }

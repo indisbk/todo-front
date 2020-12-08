@@ -90,10 +90,18 @@
       (click)="activateTask()"
     >Активировать</button>
 
-    <button mat-button class="btn-danger" (click)="delete()">Удалить задачу</button>
+    <button
+      mat-button
+      class="btn-danger"
+      (click)="delete()"
+    >Удалить задачу</button>
   </div>
 </mat-dialog-actions>
 
 <ng-template #completeTask>
-  <button mat-button class="btn-success" (click)="finishTask()">Завершить задачу</button>
+  <button
+    mat-button
+    class="btn-success"
+    (click)="finishTask()"
+  >Завершить задачу</button>
 </ng-template>

@@ -45,8 +45,12 @@ export class TasksComponent implements OnInit, AfterViewInit {
   selectedPriorityFilter: Priority;
 
   @Input()
+  selectedCategory: Category;
+
+  @Input()
   priorities: Priority[];
 
+  @Output() addTask = new EventEmitter<Task>();
   @Output() editTask = new EventEmitter<Task>();
   @Output() deleteTask = new EventEmitter<Task>();
   @Output() selectCategory = new EventEmitter<Category>();
@@ -64,6 +68,7 @@ export class TasksComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    console.log('First init tasks: ', this.tasks);
     this.fillTable();
   }
 
@@ -178,5 +183,27 @@ export class TasksComponent implements OnInit, AfterViewInit {
   onFilterByPriority(priority: Priority): void {
     this.selectedPriorityFilter = priority;
     this.filterByPriority.emit(this.selectedPriorityFilter);
+  }
+
+  openAddTaskDialog(): void {
+    const task: Task = {
+      id: null,
+      title: '',
+      priority: null,
+      completed: false,
+      category: this.selectedCategory,
+      date: null
+    };
+    const dialogRef = this.dialog.open(EditTaskDialogComponent, {
+      data: {
+        taskObj: task,
+        dialogTitle: 'Создание новой задачи'
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.addTask.emit(task);
+      }
+    });
   }
 }
