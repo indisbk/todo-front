@@ -3,6 +3,7 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog
 import {DataHandlerService} from '../../services/data-handler.service';
 import {Category} from '../../model/Category';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
+import {OperationType} from '../OperationType';
 
 @Component({
   selector: 'app-edit-category-dialog',
@@ -13,7 +14,7 @@ export class EditCategoryDialogComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<EditCategoryDialogComponent>, // for work with this dialog window
-    @Inject(MAT_DIALOG_DATA) private data: {categoryObj: Category, dialogTitle: string}, // data in dialog reference
+    @Inject(MAT_DIALOG_DATA) private data: {categoryObj: Category, dialogTitle: string, type: OperationType}, // data in dialog reference
     private dataHandlerService: DataHandlerService,
     private dialog: MatDialog // for open new dialog window(confirmed for example)
   ) { }
@@ -22,6 +23,8 @@ export class EditCategoryDialogComponent implements OnInit {
   dialogTitle: string;
   // Edited task
   category: Category;
+  // Type of operation
+  operType: OperationType;
 
   // Temporary field of task title
   tmpTitle: string;
@@ -64,5 +67,9 @@ export class EditCategoryDialogComponent implements OnInit {
         this.dialogRef.close('delete'); // press delete button
       }
     });
+  }
+
+  canDelete(): boolean {
+    return this.operType === OperationType.EDIT;
   }
 }

@@ -115,4 +115,10 @@ export class AppComponent implements OnInit, OnDestroy {
       .addTask(newTask)
       .subscribe(() => this.updateTasks());
   }
+
+  onAddCategory(newCategory: Category): void {
+    this.dataHandlerService
+      .addCategory(newCategory)
+      .subscribe(() => this.updateTasks());
+  }
 }
