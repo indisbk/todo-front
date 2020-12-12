@@ -8,6 +8,7 @@ import {EditTaskDialogComponent} from '../../dialog/edit-task-dialog/edit-task-d
 import {ConfirmDialogComponent} from '../../dialog/confirm-dialog/confirm-dialog.component';
 import {Category} from '../../model/Category';
 import {Priority} from '../../model/Priority';
+import {OperationType} from '../../dialog/OperationType';
 
 const COMPLETED_COLOR = '#f8f9fa';
 const NO_PRIORITY_COLOR = '#fff';
@@ -128,7 +129,8 @@ export class TasksComponent implements OnInit, AfterViewInit {
       .open(EditTaskDialogComponent, {
         data: {
           taskObj: task,
-          dialogTitle: 'Редактирование задачи'
+          dialogTitle: 'Редактирование задачи',
+          type: OperationType.EDIT
         },
         autoFocus: false // give the user a choice
       })
@@ -197,7 +199,8 @@ export class TasksComponent implements OnInit, AfterViewInit {
     const dialogRef = this.dialog.open(EditTaskDialogComponent, {
       data: {
         taskObj: task,
-        dialogTitle: 'Создание новой задачи'
+        dialogTitle: 'Создание новой задачи',
+        type: OperationType.ADD
       }
     });
     dialogRef.afterClosed().subscribe(result => {

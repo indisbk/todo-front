@@ -5,6 +5,7 @@ import {DataHandlerService} from '../../services/data-handler.service';
 import {Category} from '../../model/Category';
 import {Priority} from '../../model/Priority';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
+import {OperationType} from '../OperationType';
 
 @Component({
   selector: 'app-edit-task-dialog',
@@ -15,7 +16,7 @@ export class EditTaskDialogComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<EditTaskDialogComponent>, // for work with this dialog window
-    @Inject(MAT_DIALOG_DATA) private data: {taskObj: Task, dialogTitle: string}, // data in dialog reference
+    @Inject(MAT_DIALOG_DATA) private data: {taskObj: Task, dialogTitle: string, type: OperationType}, // data in dialog reference
     private dataHandlerService: DataHandlerService,
     private dialog: MatDialog // for open new dialog window(confirmed for example)
   ) { }
@@ -27,6 +28,8 @@ export class EditTaskDialogComponent implements OnInit {
   dialogTitle: string;
   // Edited task
   task: Task;
+  // Type of operation
+  operType: OperationType;
 
   // Temporary field of task title
   tmpTitle: string;
@@ -41,6 +44,7 @@ export class EditTaskDialogComponent implements OnInit {
   ngOnInit(): void {
     this.task = this.data.taskObj;
     this.dialogTitle = this.data.dialogTitle;
+    this.operType = this.data.type;
 
     // for view current values
     this.tmpTitle = this.task.title;
@@ -96,5 +100,13 @@ export class EditTaskDialogComponent implements OnInit {
   finishTask(): void {
     this.task.completed = true;
     this.dialogRef.close(this.task);
+  }
+
+  canDelete(): boolean {
+    return this.operType === OperationType.EDIT;
+  }
+
+  canActivateOrDeactivate(): boolean {
+    return this.operType === OperationType.EDIT;
   }
 }

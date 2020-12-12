@@ -86,7 +86,7 @@
     <button
       mat-button
       class="btn-success"
-      *ngIf="task.completed; else completeTask"
+      *ngIf="task.completed && canActivateOrDeactivate(); else completeTask"
       (click)="activateTask()"
     >Активировать</button>
 
@@ -94,6 +94,7 @@
       mat-button
       class="btn-danger"
       (click)="delete()"
+      *ngIf="canDelete()"
     >Удалить задачу</button>
   </div>
 </mat-dialog-actions>
@@ -102,6 +103,7 @@
   <button
     mat-button
     class="btn-success"
+    *ngIf="canActivateOrDeactivate()"
     (click)="finishTask()"
   >Завершить задачу</button>
 </ng-template>
