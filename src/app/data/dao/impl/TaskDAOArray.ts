@@ -38,7 +38,7 @@ export class TaskDAOArray implements TaskDAO {
   }
 
   getCompletedCountInCategory(category: Category): Observable<number> {
-    return undefined;
+    return of(this.searchTasks(category, null, true, null).length);
   }
 
   getTotalCount(): Observable<number> {
@@ -46,11 +46,11 @@ export class TaskDAOArray implements TaskDAO {
   }
 
   getTotalCountInCategory(category: Category): Observable<number> {
-    return undefined;
+    return of(this.searchTasks(category, null, null, null).length);
   }
 
   getUncompletedCountInCategory(category: Category): Observable<number> {
-    return undefined;
+    return of(this.searchTasks(category, null, false, null).length);
   }
 
   search(
@@ -66,7 +66,7 @@ export class TaskDAOArray implements TaskDAO {
     if (searchText && searchText.trim() !== '') {
       filteredTasks = filteredTasks.filter(task => task.title.toLowerCase().includes(searchText.toLowerCase()));
     }
-    if (status) {
+    if (status != null) {
       filteredTasks = filteredTasks.filter(task => task.completed === status);
     }
     if (priority) {
@@ -83,5 +83,11 @@ export class TaskDAOArray implements TaskDAO {
 
   getTasksByCategory(category: Category): Observable<Task[]> {
     return of(TestData.tasks.filter(task => task.category === category));
+  }
+
+  private searchTasks(category: Category, searchText: string, completed: boolean, priority: Priority): Task[] {
+    let findedTasks: Task[];
+    this.search(category, searchText, completed, priority).subscribe(tasks => findedTasks = tasks);
+    return findedTasks;
   }
 }

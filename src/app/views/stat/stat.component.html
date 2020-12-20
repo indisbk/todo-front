@@ -1,1 +1,40 @@
-<p>stat works!</p>
+<div>
+  <div class="row">
+
+    <app-stat-card
+      class="col-lg-3 col-md-6 col-sm-6"
+      title="Завершенные задачи"
+      iconName="done"
+      [firstCount]="completeTasksInCategory"
+      [countTotal]="totalTasksInCategory"
+      [completed]="true"
+    >
+    </app-stat-card>
+
+    <app-stat-card
+      class="col-lg-3 col-md-6 col-sm-6"
+      title="Незавершенные задачи"
+      iconName="thumb_down_alt"
+      [firstCount]="unCompleteTasksInCategory"
+      [countTotal]="totalTasksInCategory"
+    >
+    </app-stat-card>
+
+    <app-stat-card
+      class="col-lg-3 col-md-6 col-sm-6"
+      title="Процент завершенных задач"
+      iconName="poll"
+      [firstCount]="completeTasksInCategory ? (completeTasksInCategory/totalTasksInCategory | percent):'0 %'"
+      [completed]="true"
+    >
+    </app-stat-card>
+
+    <app-stat-card
+      class="col-lg-3 col-md-6 col-sm-6"
+      title="Процент незавершенных задач"
+      iconName="thumb_down_alt"
+      [firstCount]="unCompleteTasksInCategory ? (unCompleteTasksInCategory/totalTasksInCategory | percent):'0 %'"
+    >
+    </app-stat-card>
+  </div>
+</div>
