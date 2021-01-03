@@ -32,6 +32,7 @@ export class AppComponent implements OnInit, OnDestroy {
   completedCountInCategory: number;
   uncompletedCountInCategory: number;
   uncompletedTotalTasksCount: number;
+  showStat = true;
 
   constructor(
     private dataHandlerService: DataHandlerService
@@ -153,5 +154,9 @@ export class AppComponent implements OnInit, OnDestroy {
       this.uncompletedCountInCategory = array[2];
       this.uncompletedTotalTasksCount = array[3];
     });
+  }
+
+  toggleStat(showStat: boolean): void {
+    this.showStat = showStat;
   }
 }
