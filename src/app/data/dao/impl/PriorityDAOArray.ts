@@ -7,24 +7,50 @@ import {Injectable} from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
+// DAO for priority(in memory realized)
 export class PriorityDAOArray implements PriorityDAO {
-  add(object: Priority): Observable<Priority> {
-    return undefined;
-  }
-
-  delete(id: number): Observable<Priority> {
-    return undefined;
-  }
 
   get(id: number): Observable<Priority> {
-    return undefined;
+    return of(TestData.priorities.find(priority => priority.id === id));
   }
 
   getAll(): Observable<Priority[]> {
     return of(TestData.priorities);
   }
 
-  update(object: Priority): Observable<Priority> {
-    return undefined;
+  add(priority: Priority): Observable<Priority> {
+    // if id is empty, we need to generate new
+    if (priority.id === null || priority.id === 0) {
+      priority.id = this.getLastIdPriority();
+    }
+    TestData.priorities.push(priority);
+
+    return of(priority);
+  }
+
+  delete(id: number): Observable<Priority> {
+    // before delete, we must init null value for deleted priority in tasks
+    TestData.tasks.forEach(task => {
+      if (task.priority && task.priority.id === id) {
+        task.priority = null;
+      }
+    });
+
+    const tmpPriority = TestData.priorities.find(t => t.id === id);
+    TestData.priorities.splice(TestData.priorities.indexOf(tmpPriority), 1);
+
+    return of(tmpPriority);
+  }
+
+  update(priority: Priority): Observable<Priority> {
+    const tmp = TestData.priorities.find(t => t.id === priority.id);
+    TestData.priorities.splice(TestData.priorities.indexOf(tmp), 1, priority);
+
+    return of(priority);
+  }
+
+  // Generate new Id for new priority(just in memory, not for DB)
+  private getLastIdPriority(): number {
+    return Math.max.apply(Math, TestData.priorities.map(c => c.id)) + 1;
   }
 }

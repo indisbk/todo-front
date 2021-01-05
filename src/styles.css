@@ -8,6 +8,18 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+.not-found {
+  margin-top: 30px;
+  font-size: 20px;
+  color: rgba(74, 74, 74, 0.98);
+  text-align: center;
+
+}
+
+.pointer {
+  cursor: pointer;
+}
+
 .size25 {
   font-size: 25px !important;
 }
@@ -36,4 +48,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 app-header {
   width: 100%;
+}
+
+.red {
+  color: red;
+}
+
+.gray {
+  color: #8f8f8f;
 }

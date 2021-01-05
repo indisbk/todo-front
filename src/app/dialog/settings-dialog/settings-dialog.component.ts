@@ -26,4 +26,21 @@ export class SettingsDialogComponent implements OnInit {
   onClose(): void {
     this.dialogRef.close(false);
   }
+
+  // since we change the values in the arrays, then the changes are immediately reflected in the task list (no additional update required)
+
+  // Add new priority
+  onAddPriority(priority: Priority): void {
+    this.dataHandlerService.addPriority(priority).subscribe();
+  }
+
+  // Delete priority
+  onDeletePriority(priority: Priority): void {
+    this.dataHandlerService.deletePriority(priority.id).subscribe();
+  }
+
+  // Update priority
+  onUpdatePriority(priority: Priority): void {
+    this.dataHandlerService.updatePriority(priority).subscribe();
+  }
 }

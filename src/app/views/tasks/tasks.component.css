@@ -41,10 +41,6 @@
   width: 10% !important;
 }
 
-.pointer {
-  cursor: pointer;
-}
-
 .delete-icon {
   cursor: pointer;
   color: #ea6561;

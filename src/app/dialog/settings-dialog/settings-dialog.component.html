@@ -4,6 +4,9 @@
 
   <!--list of priorities-->
   <app-priorities
+    (addPriority)="onAddPriority($event)"
+    (deletePriority)="onDeletePriority($event)"
+    (updatePriority)="onUpdatePriority($event)"
     [priorities] = "priorities"
   >
   </app-priorities>

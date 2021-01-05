@@ -19,9 +19,7 @@ export class DataHandlerService {
   ) {
   }
 
-  getAllCategories(): Observable<Category[]> {
-    return this.categoryDAOArray.getAll();
-  }
+  // ------------------------------------Methods for manipulating tasks---------------------------
 
   getAllTasks(): Observable<Task[]> {
     return this.taskDaoArray.getAll();
@@ -45,32 +43,12 @@ export class DataHandlerService {
     return this.taskDaoArray.update(task);
   }
 
-  getAllPriorities(): Observable<Priority[]> {
-    return this.priorityDAOArray.getAll();
-  }
-
   deleteTask(task: Task): Observable<Task> {
     return this.taskDaoArray.delete(task.id);
   }
 
-  updateCategory(category: Category): Observable<Category> {
-    return this.categoryDAOArray.update(category);
-  }
-
-  deleteCategory(category: Category): Observable<Category> {
-    return this.categoryDAOArray.delete(category.id);
-  }
-
   addTask(newTask: Task): Observable<Task> {
     return this.taskDaoArray.add(newTask);
-  }
-
-  addCategory(newCategory: Category): Observable<Category> {
-    return this.categoryDAOArray.add(newCategory);
-  }
-
-  searchCategories(title: string): Observable<Category[]> {
-    return this.categoryDAOArray.search(title);
   }
 
   getTotalCountInCategory(category: Category): Observable<number> {
@@ -87,5 +65,45 @@ export class DataHandlerService {
 
   getUncompletedTotalCount(): Observable<number> {
     return this.taskDaoArray.getUncompletedCountInCategory(null);
+  }
+
+  // ------------------------------------Methods for manipulating categories---------------------------
+
+  getAllCategories(): Observable<Category[]> {
+    return this.categoryDAOArray.getAll();
+  }
+
+  updateCategory(category: Category): Observable<Category> {
+    return this.categoryDAOArray.update(category);
+  }
+
+  deleteCategory(category: Category): Observable<Category> {
+    return this.categoryDAOArray.delete(category.id);
+  }
+
+  addCategory(newCategory: Category): Observable<Category> {
+    return this.categoryDAOArray.add(newCategory);
+  }
+
+  searchCategories(title: string): Observable<Category[]> {
+    return this.categoryDAOArray.search(title);
+  }
+
+  // ------------------------------------Methods for manipulating priorities---------------------------
+
+  getAllPriorities(): Observable<Priority[]> {
+    return this.priorityDAOArray.getAll();
+  }
+
+  addPriority(priority: Priority): Observable<Priority> {
+    return this.priorityDAOArray.add(priority);
+  }
+
+  deletePriority(id: number): Observable<Priority> {
+    return this.priorityDAOArray.delete(id);
+  }
+
+  updatePriority(priority: Priority): Observable<Priority> {
+    return this.priorityDAOArray.update(priority);
   }
 }
