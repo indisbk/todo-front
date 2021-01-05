@@ -1,15 +1,24 @@
 <div class="wrapper ">
-<app-categories
-  [categories]="categories"
-  [selectedCategory]="selectedCategory"
-  [categoryMap] = "categoryMap"
-  [uncompletedTotal]="uncompletedTotalTasksCount"
-  (selectCategory)="onSelectCategory($event)"
-  (updateCategory)="onUpdateCategory($event)"
-  (deleteCategory)="onDeleteCategory($event)"
-  (addCategory)="onAddCategory($event)"
-  (searchCategory)="onSearchCategory($event)"
-></app-categories>
+  <div
+    class="sidebar"
+    data-color="purple"
+    data-background-color="white"
+    data-step="1"
+    data-intro="Фильтрация задач, добавление/удаление/редактирование категорий"
+    data-position="right"
+  >
+    <app-categories
+      [categories]="categories"
+      [selectedCategory]="selectedCategory"
+      [categoryMap] = "categoryMap"
+      [uncompletedTotal]="uncompletedTotalTasksCount"
+      (selectCategory)="onSelectCategory($event)"
+      (updateCategory)="onUpdateCategory($event)"
+      (deleteCategory)="onDeleteCategory($event)"
+      (addCategory)="onAddCategory($event)"
+      (searchCategory)="onSearchCategory($event)"
+    ></app-categories>
+  </div>
 
   <div class="main-panel">
     <!-- Navbar -->
@@ -23,17 +32,27 @@
     <!-- End Navbar -->
     <div class="content">
       <div class="container-fluid">
-
-        <app-stat
-          *ngIf="showStat"
-          [totalTasksInCategory]="totalTasksCountInCategory"
-          [completeTasksInCategory]="completedCountInCategory"
-          [unCompleteTasksInCategory]="uncompletedCountInCategory"
+        <div
+          data-step="3"
+          data-intro="Статистика по завершенным/незавершенным задачам"
+          data-position="top"
         >
-        </app-stat>
+          <app-stat
+            *ngIf="showStat"
+            [totalTasksInCategory]="totalTasksCountInCategory"
+            [completeTasksInCategory]="completedCountInCategory"
+            [unCompleteTasksInCategory]="uncompletedCountInCategory"
+          >
+          </app-stat>
+        </div>
 
         <div class="row">
-          <div class="col-12">
+          <div
+            class="col-12"
+            data-step="2"
+            data-intro="Список всех задач с возможностью редактирования"
+            data-position="bottom"
+          >
             <app-tasks
               [priorities]="priorities"
               [tasks]="tasks"

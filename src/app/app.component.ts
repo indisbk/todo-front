@@ -5,6 +5,7 @@ import {Subscription, zip} from 'rxjs';
 import {Category} from './model/Category';
 import {Priority} from './model/Priority';
 import {concatMap, map, switchMap} from 'rxjs/operators';
+import {IntroService} from './services/intro.service';
 
 @Component({
   selector: 'app-root',
@@ -36,7 +37,8 @@ export class AppComponent implements OnInit, OnDestroy {
   showStat = true;
 
   constructor(
-    private dataHandlerService: DataHandlerService
+    private dataHandlerService: DataHandlerService,
+    private introService: IntroService
   ) {
   }
 
@@ -46,6 +48,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.getPrioritiesSub = this.dataHandlerService.getAllPriorities().subscribe(priorities => this.priorities = priorities);
 
     this.fillCategories();
+
+    this.introService.startIntroJS(true);
   }
 
   ngOnDestroy(): void {

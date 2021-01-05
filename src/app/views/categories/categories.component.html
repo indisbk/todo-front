@@ -1,104 +1,101 @@
-<div class="sidebar" data-color="purple" data-background-color="white">
+<div class="logo">
 
-  <div class="logo">
+  <span class="nav-title">Категории</span>
 
-    <span class="nav-title">Категории</span>
+  <span class="add-icon-area">
 
-    <span class="add-icon-area">
+    <button mat-icon-button class="add-icon" (click)="openAddDialog()">
+            <mat-icon>add</mat-icon>
+    </button>
 
-      <button mat-icon-button class="add-icon" (click)="openAddDialog()">
-              <mat-icon>add</mat-icon>
+  </span>
+
+</div>
+
+<div class="sidebar-wrapper">
+  <!--      поиск категорий -->
+  <div class="search-category-area">
+
+    <mat-form-field class="example-full-width">
+      <input
+
+        #inputSearchCategory
+
+        (keydown.escape)="searchCategoryTitle = ''; searchCategoryByTitle()"
+        (keyup)="searchCategoryByTitle()"
+        [(ngModel)]="searchCategoryTitle"
+
+        matInput
+        maxlength="256"
+        placeholder="Поиск категорий"
+
+      />
+
+      <button
+        (click)="searchCategoryTitle = ''; searchCategoryByTitle()"
+        *ngIf="inputSearchCategory.value.trim().length > 0" aria-label="Clear"
+        class="search-category-button size25 gray"
+        mat-button
+
+        mat-icon-button
+
+        matSuffix
+      >
+        <mat-icon>clear</mat-icon>
       </button>
 
-    </span>
+    </mat-form-field>
 
   </div>
-
-  <div class="sidebar-wrapper">
-    <!--      поиск категорий -->
-    <div class="search-category-area">
-
-      <mat-form-field class="example-full-width">
-        <input
-
-          #inputSearchCategory
-
-          (keydown.escape)="searchCategoryTitle = ''; searchCategoryByTitle()"
-          (keyup)="searchCategoryByTitle()"
-          [(ngModel)]="searchCategoryTitle"
-
-          matInput
-          maxlength="256"
-          placeholder="Поиск категорий"
-
-        />
-
-        <button
-          (click)="searchCategoryTitle = ''; searchCategoryByTitle()"
-          *ngIf="inputSearchCategory.value.trim().length > 0" aria-label="Clear"
-          class="search-category-button size25 gray"
-          mat-button
-
-          mat-icon-button
-
-          matSuffix
-        >
-          <mat-icon>clear</mat-icon>
-        </button>
-
-      </mat-form-field>
-
-    </div>
-    <ul class="nav" *ngIf="categories && categories.length > 0; else nothing">
+  <ul class="nav" *ngIf="categories && categories.length > 0; else nothing">
 
 
-      <!--Virtual category "All"-->
-      <li
-        class="nav-item pointer"
-        (click)="showTasksByCategory(null)"
-        [class.active]="selectedCategory === null"
-      >
-        <a class="nav-link pointer">
-          <!--Category name-->
-          <span class="all-category-title">Все</span>
-          <!--All uncompleted tasks-->
-          <span class="uncompleted-count">{{uncompletedTotal}}</span>
-        </a>
-      </li>
+    <!--Virtual category "All"-->
+    <li
+      class="nav-item pointer"
+      (click)="showTasksByCategory(null)"
+      [class.active]="selectedCategory === null"
+    >
+      <a class="nav-link pointer">
+        <!--Category name-->
+        <span class="all-category-title">Все</span>
+        <!--All uncompleted tasks-->
+        <span class="uncompleted-count">{{uncompletedTotal}}</span>
+      </a>
+    </li>
 
-      <!--Separator-->
-      <hr>
+    <!--Separator-->
+    <hr>
 
-      <li
-        class="nav-item pointer"
-        *ngFor="let categoryMap of selectedCategoryMap | keyvalue; let idx = index"
-        (click)="showTasksByCategory(categoryMap.key)"
-        (mouseleave)="showEditIcon(null)"
-        (mouseenter)="showEditIcon(idx)"
-        [class.active]="categoryMap.key === selectedCategory"
-      >
-        <a class="nav-link">
+    <li
+      class="nav-item pointer"
+      *ngFor="let categoryMap of selectedCategoryMap | keyvalue; let idx = index"
+      (click)="showTasksByCategory(categoryMap.key)"
+      (mouseleave)="showEditIcon(null)"
+      (mouseenter)="showEditIcon(idx)"
+      [class.active]="categoryMap.key === selectedCategory"
+    >
+      <a class="nav-link">
 
-          <!--Category title-->
-          <span class="category-title">{{categoryMap.key.title}}</span>
+        <!--Category title-->
+        <span class="category-title">{{categoryMap.key.title}}</span>
 
-          <!--Edit category button-->
-          <span class="edit-category-icon-area">
-            <mat-icon
-              *ngIf="indexMouseMove === idx"
-              (click)="$event.stopPropagation(); openEditDialog(categoryMap.key)"
-              class="edit-category-icon"
-            >edit</mat-icon>
-          </span>
+        <!--Edit category button-->
+        <span class="edit-category-icon-area">
+          <mat-icon
+            *ngIf="indexMouseMove === idx"
+            (click)="$event.stopPropagation(); openEditDialog(categoryMap.key)"
+            class="edit-category-icon"
+          >edit</mat-icon>
+        </span>
 
-          <!--how many uncompleted tasks-->
-          <span class="uncompleted-count"> {{categoryMap.value}}</span>
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div class="sidebar-background"></div>
-  <ng-template #nothing>
-    <h4 class="text-center">Ничего не найдено</h4>
-  </ng-template>
+        <!--how many uncompleted tasks-->
+        <span class="uncompleted-count"> {{categoryMap.value}}</span>
+      </a>
+    </li>
+  </ul>
 </div>
+<div class="sidebar-background"></div>
+<ng-template #nothing>
+  <h4 class="text-center">Ничего не найдено</h4>
+</ng-template>
