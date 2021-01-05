@@ -14,16 +14,24 @@ export class CategoriesComponent implements OnInit {
 
   @Input() categories: Category[];
 
+  @Input() selectedCategory: Category;
+
+  @Input('categoryMap')
+  set setCategoryMap(categoryMap: Map<Category, number>) {
+    this.selectedCategoryMap = categoryMap;
+  }
+
+  @Input() uncompletedTotal: number;
+
   @Output() selectCategory = new EventEmitter<Category>();
   @Output() updateCategory = new EventEmitter<Category>();
   @Output() deleteCategory = new EventEmitter<Category>();
   @Output() addCategory = new EventEmitter<Category>();
+
   @Output() searchCategory = new EventEmitter<string>();
-
-  @Input() selectedCategory: Category;
-
   indexMouseMove: number;
   searchCategoryTitle: string;
+  selectedCategoryMap: Map<Category, number>;
 
   constructor(private dialog: MatDialog) { }
 

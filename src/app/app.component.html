@@ -2,6 +2,8 @@
 <app-categories
   [categories]="categories"
   [selectedCategory]="selectedCategory"
+  [categoryMap] = "categoryMap"
+  [uncompletedTotal]="uncompletedTotalTasksCount"
   (selectCategory)="onSelectCategory($event)"
   (updateCategory)="onUpdateCategory($event)"
   (deleteCategory)="onDeleteCategory($event)"
@@ -37,7 +39,7 @@
               [tasks]="tasks"
               [selectedCategory]="selectedCategory"
               (addTask)="onAddTask($event)"
-              (editTask)="onSelectTask($event)"
+              (editTask)="onUpdateTask($event)"
               (deleteTask)="onDeleteTask($event)"
               (selectCategory)="onSelectCategory($event)"
               (filterByTitle)="onFilterTasksByText($event)"

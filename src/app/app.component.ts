@@ -4,7 +4,7 @@ import {DataHandlerService} from './services/data-handler.service';
 import {Subscription, zip} from 'rxjs';
 import {Category} from './model/Category';
 import {Priority} from './model/Priority';
-import {switchMap} from 'rxjs/operators';
+import {concatMap, map, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -13,10 +13,10 @@ import {switchMap} from 'rxjs/operators';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
+  categoryMap = new Map<Category, number>();
+
   tasks: Task[];
-
   priorities: Priority[];
-
   categories: Category[];
 
   getCategoriesSub: Subscription;
@@ -28,6 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private priorityFilter: Priority;
   private searchCategoryTitle: string;
 
+  // statistics
   totalTasksCountInCategory: number;
   completedCountInCategory: number;
   uncompletedCountInCategory: number;
@@ -43,6 +44,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.onSelectCategory(null);
     this.getCategoriesSub = this.dataHandlerService.getAllCategories().subscribe(categories => this.categories = categories);
     this.getPrioritiesSub = this.dataHandlerService.getAllPriorities().subscribe(priorities => this.priorities = priorities);
+
+    this.fillCategories();
   }
 
   ngOnDestroy(): void {
@@ -54,36 +57,37 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  private updateTasks(): void {
-    this.dataHandlerService.searchTasks(
-      this.selectedCategory,
-      this.searchTaskText,
-      this.statusFilter,
-      this.priorityFilter
-    ).subscribe((tasks: Task[]) => this.tasks = tasks);
+  // -------------------------------Categories methods----------------------------------------------------------
+
+  // fills in categories and the number of outstanding tasks for each of them (needed to display categories)
+  private fillCategories(): void {
+    if (this.categoryMap) {
+      this.categoryMap.clear();
+    }
+
+    this.categories = this.categories.sort((a, b) => a.title.localeCompare(b.title));
+
+    // for each category count uncompleted tasks
+    this.categories.forEach(cat => {
+      this.dataHandlerService
+        .getUncompletedCountInCategory(cat)
+        .subscribe(count => this.categoryMap.set(cat, count));
+    });
+  }
+
+  onSearchCategory(title: string): void {
+    this.searchCategoryTitle = title;
+    this.dataHandlerService
+      .searchCategories(title)
+      .subscribe(categories => {
+        this.categories = categories;
+        this.fillCategories();
+      });
   }
 
   onSelectCategory(category: Category): void {
     this.selectedCategory = category;
     this.updateTasksAndStat();
-  }
-
-  // Update selected task
-  onSelectTask(task: Task): void {
-    this.dataHandlerService
-      .updateTask(task)
-      .pipe(
-        switchMap(() => {
-            return this.dataHandlerService.searchTasks(this.selectedCategory);
-          }
-        )
-      ).subscribe(tasks => this.tasks = tasks);
-  }
-
-  onDeleteTask(task: Task): void {
-    this.dataHandlerService
-      .deleteTask(task)
-      .subscribe(() => this.updateTasksAndStat());
   }
 
   onUpdateCategory(category: Category): void {
@@ -97,10 +101,86 @@ export class AppComponent implements OnInit, OnDestroy {
       .deleteCategory(category)
       .subscribe(() => {
         this.selectedCategory = null;
-        this.onSelectCategory(null);
+        this.categoryMap.delete(category);
+        this.onSearchCategory(this.searchCategoryTitle);
+        this.updateTasks();
       });
 
   }
+
+  onAddCategory(newCategory: Category): void {
+    this.dataHandlerService
+      .addCategory(newCategory)
+      .subscribe(() => this.updateTasks());
+  }
+
+  // -------------------------------Tasks methods----------------------------------------------------------
+
+  private updateTasks(): void {
+    this.dataHandlerService.searchTasks(
+      this.selectedCategory,
+      this.searchTaskText,
+      this.statusFilter,
+      this.priorityFilter
+    ).subscribe((tasks: Task[]) => this.tasks = tasks);
+  }
+
+  // Update selected task
+  onUpdateTask(task: Task): void {
+    this.dataHandlerService
+      .updateTask(task)
+      .subscribe(() => {
+        this.fillCategories();
+        this.updateTasksAndStat();
+      });
+  }
+
+  onDeleteTask(task: Task): void {
+    this.dataHandlerService.deleteTask(task).pipe(
+      concatMap(deletedtask => {
+          return this.dataHandlerService
+            .getUncompletedCountInCategory(deletedtask.category)
+            .pipe(
+              map(count => {
+                return ({t: deletedtask, count});
+                }
+              )
+            );
+        }
+      )).subscribe(result => {
+
+      const t = result.t as Task;
+      this.categoryMap.set(t.category, result.count);
+
+      this.updateTasksAndStat();
+    });
+  }
+
+  onAddTask(newTask: Task): void {
+    this.dataHandlerService.addTask(newTask).pipe(// сначала добавляем задачу
+      concatMap(task => {
+          return this.dataHandlerService
+            .getUncompletedCountInCategory(task.category)
+            .pipe(
+              map(count => {
+                return ({t: task, count});
+                }
+              )
+            );
+        }
+      )).subscribe(result => {
+
+      const t = result.t as Task;
+
+      if (t.category) {
+        this.categoryMap.set(t.category, result.count);
+      }
+
+      this.updateTasksAndStat();
+    });
+  }
+
+  // -------------------------------Filter tasks methods----------------------------------------------------------
 
   onFilterTasksByText(searchText: string): void {
     this.searchTaskText = searchText;
@@ -117,24 +197,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.updateTasks();
   }
 
-  onAddTask(newTask: Task): void {
-    this.dataHandlerService
-      .addTask(newTask)
-      .subscribe(() => this.updateTasksAndStat());
-  }
-
-  onAddCategory(newCategory: Category): void {
-    this.dataHandlerService
-      .addCategory(newCategory)
-      .subscribe(() => this.updateTasks());
-  }
-
-  onSearchCategory(title: string): void {
-    this.searchCategoryTitle = title;
-    this.dataHandlerService
-      .searchCategories(title)
-      .subscribe(categories => this.categories = categories);
-  }
+  // -------------------------------Statistics methods----------------------------------------------------------
 
   private updateTasksAndStat(): void {
     this.updateTasks();

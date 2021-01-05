@@ -61,6 +61,8 @@
         <a class="nav-link pointer">
           <!--Category name-->
           <span class="all-category-title">Все</span>
+          <!--All uncompleted tasks-->
+          <span class="uncompleted-count">{{uncompletedTotal}}</span>
         </a>
       </li>
 
@@ -69,25 +71,28 @@
 
       <li
         class="nav-item pointer"
-        *ngFor="let category of categories; let idx = index"
-        (click)="showTasksByCategory(category)"
+        *ngFor="let categoryMap of selectedCategoryMap | keyvalue; let idx = index"
+        (click)="showTasksByCategory(categoryMap.key)"
         (mouseleave)="showEditIcon(null)"
         (mouseenter)="showEditIcon(idx)"
-        [class.active]="category === selectedCategory"
+        [class.active]="categoryMap.key === selectedCategory"
       >
         <a class="nav-link">
 
           <!--Category title-->
-          <span class="category-title">{{category.title}}</span>
+          <span class="category-title">{{categoryMap.key.title}}</span>
 
           <!--Edit category button-->
           <span class="edit-category-icon-area">
             <mat-icon
               *ngIf="indexMouseMove === idx"
-              (click)="$event.stopPropagation(); openEditDialog(category)"
+              (click)="$event.stopPropagation(); openEditDialog(categoryMap.key)"
               class="edit-category-icon"
             >edit</mat-icon>
           </span>
+
+          <!--how many uncompleted tasks-->
+          <span class="uncompleted-count"> {{categoryMap.value}}</span>
         </a>
       </li>
     </ul>
