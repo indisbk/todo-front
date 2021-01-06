@@ -36,10 +36,17 @@ export class AppComponent implements OnInit, OnDestroy {
   uncompletedTotalTasksCount: number;
   showStat = true;
 
+  // Sidebar properties
+  menuOpened = true;
+  menuMode: string;
+  menuPosition: string;
+  showBackdrop: boolean;
+
   constructor(
     private dataHandlerService: DataHandlerService,
     private introService: IntroService
   ) {
+    this.setMenuValues();
   }
 
   ngOnInit(): void {
@@ -225,5 +232,25 @@ export class AppComponent implements OnInit, OnDestroy {
 
   toggleStat(showStat: boolean): void {
     this.showStat = showStat;
+  }
+
+  // -------------------------------Sidebar methods----------------------------------------------------------
+
+  // Close sidebar menu
+  onCloseMenu(): void {
+    this.menuOpened = false;
+  }
+
+  // Menu parameters
+  setMenuValues(): void {
+    this.menuPosition = 'left'; // position by left
+    this.menuOpened = true; // menu was opened already
+    this.menuMode = 'push'; // just push main content, not to close
+    this.showBackdrop = false; // show dark background(for mobile version needed)
+  }
+
+  // Show/hide sidebar menu
+  toggleMenu(): void {
+    this.menuOpened = !this.menuOpened;
   }
 }

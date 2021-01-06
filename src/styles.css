@@ -58,3 +58,7 @@ app-header {
 .gray {
   color: #8f8f8f;
 }
+
+.rolling {
+  overflow: hidden;
+}
