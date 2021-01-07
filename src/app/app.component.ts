@@ -4,8 +4,9 @@ import {DataHandlerService} from './services/data-handler.service';
 import {Subscription, zip} from 'rxjs';
 import {Category} from './model/Category';
 import {Priority} from './model/Priority';
-import {concatMap, map, switchMap} from 'rxjs/operators';
+import {concatMap, map} from 'rxjs/operators';
 import {IntroService} from './services/intro.service';
+import {DeviceDetectorService} from 'ngx-device-detector';
 
 @Component({
   selector: 'app-root',
@@ -42,10 +43,22 @@ export class AppComponent implements OnInit, OnDestroy {
   menuPosition: string;
   showBackdrop: boolean;
 
+  // Type of device
+  isMobile: boolean;
+  isTablet: boolean;
+
   constructor(
     private dataHandlerService: DataHandlerService,
-    private introService: IntroService
+    private introService: IntroService,
+    private deviceDetector: DeviceDetectorService
   ) {
+
+    // detect device
+    this.isMobile = deviceDetector.isMobile();
+    this.isTablet = deviceDetector.isTablet();
+    console.log('Мобильная версия: ', this.isMobile);
+    this.showStat = !this.isMobile;
+
     this.setMenuValues();
   }
 
@@ -56,7 +69,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.fillCategories();
 
-    this.introService.startIntroJS(true);
+    // don't show intro if device is mobile and tablet
+    if (!this.isMobile && !this.isTablet) {
+      this.introService.startIntroJS(true);
+    }
   }
 
   ngOnDestroy(): void {
@@ -244,9 +260,15 @@ export class AppComponent implements OnInit, OnDestroy {
   // Menu parameters
   setMenuValues(): void {
     this.menuPosition = 'left'; // position by left
-    this.menuOpened = true; // menu was opened already
-    this.menuMode = 'push'; // just push main content, not to close
-    this.showBackdrop = false; // show dark background(for mobile version needed)
+    if (this.isMobile) {
+      this.menuOpened = false; // menu doesn't open in beginning
+      this.menuMode = 'over'; // just push main content, not to close
+      this.showBackdrop = true; // show dark background(for mobile version needed)
+    } else {
+      this.menuOpened = true; // menu was opened already
+      this.menuMode = 'push'; // just push main content, not to close
+      this.showBackdrop = false;
+    }
   }
 
   // Show/hide sidebar menu
