@@ -9,6 +9,7 @@ import {ConfirmDialogComponent} from '../../dialog/confirm-dialog/confirm-dialog
 import {Category} from '../../model/Category';
 import {Priority} from '../../model/Priority';
 import {OperationType} from '../../dialog/OperationType';
+import {DeviceDetectorService} from 'ngx-device-detector';
 
 const COMPLETED_COLOR = '#f8f9fa';
 const NO_PRIORITY_COLOR = '#fff';
@@ -59,8 +60,15 @@ export class TasksComponent implements OnInit, AfterViewInit {
   @Output() filterByStatus = new EventEmitter<boolean>();
   @Output() filterByPriority = new EventEmitter<Priority>();
 
+  // Type of devices
+  isMobile: boolean;
 
-  constructor(private dialog: MatDialog) {
+
+  constructor(
+    private dialog: MatDialog,
+    private deviceDetector: DeviceDetectorService
+  ) {
+    this.isMobile = deviceDetector.isMobile();
   }
 
   // In runtime of the method all data is inited
@@ -208,5 +216,18 @@ export class TasksComponent implements OnInit, AfterViewInit {
         this.addTask.emit(task);
       }
     });
+  }
+
+  // Return background color by task status
+  getMobilePriorityBgColor(task: Task): string {
+    if (task.priority != null && !task.completed) {
+      return task.priority.color;
+    }
+
+    return 'none';
+  }
+
+  get getTasks(): Task[] {
+    return this.tasks;
   }
 }
